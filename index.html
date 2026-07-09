@@ -1,0 +1,1361 @@
+<title>Conferência de Transferência de Depósito</title>
+<style>
+  :root{
+    --bg:#EEF1F4;
+    --surface:#FFFFFF;
+    --surface-alt:#F7F9FB;
+    --border:#D7DEE5;
+    --border-strong:#C1CBD4;
+    --text:#1A2230;
+    --text-muted:#5F6E7D;
+    --accent:#2A5FD9;
+    --accent-contrast:#FFFFFF;
+    --ok:#1E8E5A; --ok-bg:#E3F5EC;
+    --warn:#A6690A; --warn-bg:#FBF0DD;
+    --danger:#C43D3D; --danger-bg:#FBE7E7;
+    --extra:#7452C7; --extra-bg:#EFE9FA;
+    --shadow: 0 1px 2px rgba(20,30,45,.06), 0 8px 24px rgba(20,30,45,.06);
+    --radius: 10px;
+    --font-display: "Archivo Narrow","Roboto Condensed","Arial Narrow",sans-serif;
+    --font-body: "Segoe UI","Helvetica Neue","Public Sans",Arial,sans-serif;
+    --font-mono: "Cascadia Code","SFMono-Regular",Consolas,"Roboto Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#10141B; --surface:#1A2029; --surface-alt:#212836;
+      --border:#2B3444; --border-strong:#3A4557;
+      --text:#E6EAF0; --text-muted:#8FA0B3;
+      --accent:#5B8DFF; --accent-contrast:#0B1220;
+      --ok:#3FCB8C; --ok-bg:#163024;
+      --warn:#E5A83D; --warn-bg:#34280F;
+      --danger:#F16C6C; --danger-bg:#341717;
+      --extra:#A78BFA; --extra-bg:#251C3B;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#10141B; --surface:#1A2029; --surface-alt:#212836;
+    --border:#2B3444; --border-strong:#3A4557;
+    --text:#E6EAF0; --text-muted:#8FA0B3;
+    --accent:#5B8DFF; --accent-contrast:#0B1220;
+    --ok:#3FCB8C; --ok-bg:#163024;
+    --warn:#E5A83D; --warn-bg:#34280F;
+    --danger:#F16C6C; --danger-bg:#341717;
+    --extra:#A78BFA; --extra-bg:#251C3B;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    --bg:#EEF1F4; --surface:#FFFFFF; --surface-alt:#F7F9FB;
+    --border:#D7DEE5; --border-strong:#C1CBD4;
+    --text:#1A2230; --text-muted:#5F6E7D;
+    --accent:#2A5FD9; --accent-contrast:#FFFFFF;
+    --ok:#1E8E5A; --ok-bg:#E3F5EC;
+    --warn:#A6690A; --warn-bg:#FBF0DD;
+    --danger:#C43D3D; --danger-bg:#FBE7E7;
+    --extra:#7452C7; --extra-bg:#EFE9FA;
+    --shadow: 0 1px 2px rgba(20,30,45,.06), 0 8px 24px rgba(20,30,45,.06);
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  html, body{ background:var(--bg); }
+  .app{
+    font-family:var(--font-body);
+    color:var(--text);
+    background:var(--bg);
+    min-height:100vh;
+    padding:20px 20px 48px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    max-width:1180px; margin:0 auto 16px;
+    display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .brand h1{
+    font-family:var(--font-display);
+    font-weight:700; font-size:26px; letter-spacing:.2px;
+    margin:0 0 2px; text-wrap:balance;
+  }
+  .brand p{ margin:0; color:var(--text-muted); font-size:13.5px; }
+  .actions{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  button{ font-family:inherit; cursor:pointer; }
+  .btn{
+    appearance:none; border:1px solid var(--border-strong); background:var(--surface);
+    color:var(--text); padding:8px 14px; border-radius:8px; font-size:13.5px; font-weight:600;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn:hover{ border-color:var(--accent); }
+  .btn:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--accent); outline-offset:2px;
+  }
+  .btn-primary{ background:var(--accent); border-color:var(--accent); color:var(--accent-contrast); }
+  .btn-primary:hover{ filter:brightness(1.05); }
+  .btn-ghost{ background:transparent; border-color:transparent; color:var(--text-muted); }
+  .btn-ghost:hover{ color:var(--text); border-color:var(--border-strong); }
+  .btn-sm{ padding:5px 10px; font-size:12.5px; border-radius:6px; }
+
+  main{ max-width:1180px; margin:0 auto; }
+
+  /* ---------- Stat strip ---------- */
+  .stats{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:16px;
+  }
+  @media (max-width:900px){ .stats{ grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:560px){ .stats{ grid-template-columns:repeat(2,1fr);} }
+  .stat{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:12px 14px; box-shadow:var(--shadow); cursor:pointer; border-left:3px solid transparent;
+  }
+  .stat.active{ border-left-color:var(--accent); }
+  .stat .n{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-size:22px; font-weight:700; line-height:1.1; }
+  .stat .l{ color:var(--text-muted); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; margin-top:2px; }
+  .stat.tone-ok .n{ color:var(--ok); }
+  .stat.tone-warn .n{ color:var(--warn); }
+  .stat.tone-danger .n{ color:var(--danger); }
+  .stat.tone-extra .n{ color:var(--extra); }
+
+  /* ---------- Scan dock ---------- */
+  .dock{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:16px; margin-bottom:16px;
+  }
+  .dock label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); font-weight:600; }
+  .scan-row{ display:flex; gap:10px; margin-top:6px; }
+  .scan-row input[type="text"]{
+    flex:1; font-size:17px; padding:11px 14px; border-radius:8px; border:1.5px solid var(--border-strong);
+    background:var(--surface-alt); color:var(--text); font-family:var(--font-mono);
+  }
+  .scan-row input[type="text"]::placeholder{ font-family:var(--font-body); color:var(--text-muted); }
+
+  .suggestions{ margin-top:8px; display:flex; flex-direction:column; gap:4px; }
+  .sugg-item{
+    display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:7px;
+    border:1px solid var(--border); background:var(--surface-alt); text-align:left;
+  }
+  .sugg-item:hover{ border-color:var(--accent); }
+  .sugg-item .code{ font-family:var(--font-mono); font-size:12.5px; color:var(--text-muted); min-width:74px; }
+  .sugg-item .name{ flex:1; font-size:13.5px; }
+  .sugg-item .mini{ font-size:11.5px; color:var(--text-muted); font-family:var(--font-mono); }
+
+  .confirm{
+    margin-top:10px; padding:12px; border-radius:9px; border:1.5px dashed var(--accent);
+    background:var(--surface-alt); display:flex; flex-wrap:wrap; align-items:flex-end; gap:14px;
+  }
+  .confirm .info{ flex:1; min-width:220px; }
+  .confirm .info .code{ font-family:var(--font-mono); font-size:12px; color:var(--text-muted); }
+  .confirm .info .name{ font-size:15px; font-weight:600; margin:2px 0; text-wrap:balance; }
+  .confirm .info .meta{ font-size:12.5px; color:var(--text-muted); font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+  .confirm .qty-block{ display:flex; flex-direction:column; gap:4px; }
+  .confirm .qty-block input{
+    width:110px; font-size:18px; padding:8px 10px; border-radius:7px; border:1.5px solid var(--border-strong);
+    background:var(--surface); color:var(--text); font-family:var(--font-mono); font-variant-numeric:tabular-nums;
+  }
+  .confirm .btns{ display:flex; gap:8px; }
+
+  .not-found{
+    margin-top:10px; padding:12px; border-radius:9px; border:1.5px dashed var(--danger);
+    background:var(--surface-alt);
+  }
+  .not-found .headline{ font-size:13.5px; margin-bottom:8px; color:var(--danger); font-weight:600; }
+  .not-found .row{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; }
+  .not-found .field{ display:flex; flex-direction:column; gap:4px; }
+  .not-found .field input{
+    padding:7px 9px; border-radius:7px; border:1.5px solid var(--border-strong);
+    background:var(--surface); color:var(--text); font-family:var(--font-body); font-size:13.5px;
+  }
+  .not-found .field.qty input{ width:90px; font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+  .not-found small{ color:var(--text-muted); }
+
+  /* ---------- Filter tabs ---------- */
+  .tabs{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+  .tab{
+    border:1px solid var(--border-strong); background:var(--surface); color:var(--text-muted);
+    padding:6px 12px; border-radius:999px; font-size:12.5px; font-weight:600;
+  }
+  .tab.active{ background:var(--accent); border-color:var(--accent); color:var(--accent-contrast); }
+  .table-toolbar{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+  .table-filter input{
+    padding:6px 10px; border-radius:7px; border:1px solid var(--border-strong);
+    background:var(--surface); color:var(--text); font-size:12.5px; width:220px;
+  }
+
+  /* ---------- Table ---------- */
+  .table-wrap{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:auto; max-height:56vh;
+  }
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  thead th{
+    position:sticky; top:0; background:var(--surface-alt); text-align:left; z-index:1;
+    padding:9px 10px; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted);
+    border-bottom:1px solid var(--border); white-space:nowrap;
+  }
+  tbody td{ padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  tbody tr:hover{ background:var(--surface-alt); }
+  td.code{ font-family:var(--font-mono); font-size:12px; color:var(--text-muted); white-space:nowrap; }
+  td.produto{ max-width:420px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  td.num{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; }
+  td.num input{
+    width:72px; text-align:right; font-family:var(--font-mono); font-variant-numeric:tabular-nums;
+    padding:4px 6px; border-radius:6px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text);
+  }
+  .diff-pos{ color:var(--warn); } .diff-neg{ color:var(--danger); } .diff-zero{ color:var(--text-muted); }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px;
+    font-size:11.5px; font-weight:700; white-space:nowrap;
+  }
+  .pill::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .pill.ok{ background:var(--ok-bg); color:var(--ok); }
+  .pill.warn{ background:var(--warn-bg); color:var(--warn); }
+  .pill.danger{ background:var(--danger-bg); color:var(--danger); }
+  .pill.extra{ background:var(--extra-bg); color:var(--extra); }
+
+  .empty-row td{ text-align:center; color:var(--text-muted); padding:28px; }
+
+  /* ---------- Import screen ---------- */
+  .import-wrap{ max-width:720px; margin:40px auto; }
+  .import-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    box-shadow:var(--shadow); padding:28px 30px;
+  }
+  .import-card h2{ font-family:var(--font-display); font-size:22px; margin:0 0 6px; text-wrap:balance; }
+  .import-card p.lead{ color:var(--text-muted); margin:0 0 20px; font-size:14px; max-width:60ch; }
+  .import-card textarea{
+    width:100%; min-height:150px; border-radius:9px; border:1.5px solid var(--border-strong);
+    background:var(--surface-alt); color:var(--text); padding:10px 12px; font-family:var(--font-mono); font-size:12.5px;
+    resize:vertical;
+  }
+  .import-row{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; align-items:center; }
+  .file-drop{
+    border:1.5px dashed var(--border-strong); border-radius:9px; padding:14px; text-align:center;
+    color:var(--text-muted); font-size:13px; flex:1; min-width:200px;
+  }
+  .file-drop input{ display:none; }
+  .file-drop label{ cursor:pointer; color:var(--accent); font-weight:600; }
+  .hint{ margin-top:16px; font-size:12.5px; color:var(--text-muted); border-top:1px solid var(--border); padding-top:12px; }
+  .hint code{ background:var(--surface-alt); padding:1px 5px; border-radius:4px; font-family:var(--font-mono); }
+  .import-meta{ font-size:12px; color:var(--text-muted); margin-top:14px; }
+
+  /* ---------- Shared room (sync) ---------- */
+  #syncBadge{ display:inline-block; margin-top:6px; }
+  .sync-pill{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:4px 10px; border-radius:999px;
+    border:1px solid var(--border-strong); color:var(--text-muted); background:var(--surface);
+  }
+  .sync-pill .dot{ width:7px; height:7px; border-radius:50%; background:var(--text-muted); flex:none; }
+  .sync-pill.on .dot{ background:var(--ok); }
+  .sync-pill.off .dot{ background:var(--danger); }
+  .sync-pill.syncing .dot{ background:var(--warn); }
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(10,14,20,.5); display:flex; align-items:center; justify-content:center;
+    z-index:50; padding:20px;
+  }
+  .modal-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow);
+    padding:24px 26px; max-width:480px; width:100%; position:relative;
+  }
+  .modal-card h3{ font-family:var(--font-display); font-size:19px; margin:0 0 8px; padding-right:20px; }
+  .modal-card p{ font-size:13px; color:var(--text-muted); margin:0 0 12px; line-height:1.5; }
+  .modal-card code{ background:var(--surface-alt); padding:1px 5px; border-radius:4px; font-family:var(--font-mono); }
+  .modal-card label{ font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); font-weight:600; display:block; margin:12px 0 4px; }
+  .modal-card input[type="text"], .modal-card input[type="password"]{
+    width:100%; padding:8px 10px; border-radius:7px; border:1.5px solid var(--border-strong);
+    background:var(--surface-alt); color:var(--text); font-family:var(--font-mono); font-size:13px;
+  }
+  .modal-card .row{ display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; align-items:center; }
+  .modal-card .close-x{
+    position:absolute; top:14px; right:14px; background:none; border:none; color:var(--text-muted);
+    font-size:16px; cursor:pointer; padding:2px 6px;
+  }
+  .room-code{
+    font-family:var(--font-mono); font-size:14px; font-weight:700; background:var(--surface-alt);
+    padding:7px 10px; border-radius:7px; display:inline-block; letter-spacing:.02em; word-break:break-all;
+  }
+  @media print{ .modal-overlay{ display:none !important; } }
+
+  /* ---------- Print / PDF report ---------- */
+  #printArea{ display:none; }
+  @media print{
+    .app{ display:none !important; }
+    #printArea{ display:block !important; }
+    @page{ size:A4; margin:16mm 14mm; }
+  }
+  .rpt{ font-family:var(--font-body); color:#111; background:#fff; }
+  .rpt h1{ font-family:var(--font-display); font-size:19px; margin:0 0 4px; letter-spacing:.2px; }
+  .rpt .rpt-sub{ font-size:11px; color:#444; margin:0 0 2px; }
+  .rpt .rpt-summary{ font-size:11px; color:#111; margin:10px 0 18px; padding:8px 10px; border:1px solid #999; border-radius:4px; }
+  .rpt .rpt-summary b{ font-variant-numeric:tabular-nums; }
+  .rpt section{ margin-bottom:20px; }
+  .rpt h2{
+    font-family:var(--font-display); font-size:12.5px; text-transform:uppercase; letter-spacing:.08em;
+    margin:0 0 6px; padding-bottom:3px; border-bottom:1.5px solid #111;
+  }
+  .rpt table{ width:100%; border-collapse:collapse; font-size:10.5px; }
+  .rpt thead{ display:table-header-group; }
+  .rpt th{
+    text-align:left; font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; color:#333;
+    border-bottom:1px solid #111; padding:4px 6px;
+  }
+  .rpt td{ padding:3.5px 6px; border-bottom:1px solid #ccc; }
+  .rpt td.num, .rpt th.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .rpt td.code{ font-family:var(--font-mono); white-space:nowrap; color:#333; }
+  .rpt tr{ break-inside:avoid; }
+  .rpt .rpt-empty{ font-size:11px; color:#666; font-style:italic; }
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <h1>Conferência de Transferência</h1>
+      <p id="subtitle">Confira a chegada de materiais entre depósitos, item a item.</p>
+      <span id="syncBadge"></span>
+    </div>
+    <div class="actions" id="topActions"></div>
+  </div>
+
+  <main id="main"></main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STORE_KEY = "wh_conf_v2";
+
+  var state = { items: [], extras: [], importedAt: null, sourceLabel: "" };
+
+  // ---------- SEED DATA (extraído do relatório em PDF anexado, amostra inicial) ----------
+  // [codigo, unidade, produto, quantidade esperada]
+  var SEED_DATA = [
+["275677","UN",'ABRACADEIRA PARA FITA LED COB 10W 12V IP65 | GAYA PRO - 5635',36],
+["246256","UN",'ABRACADEIRA PARA FITA LED NEON SUPER FLEXIVEL 8W | GAYA PRATIK - 5571',50],
+["114196","UN",'ABRACADEIRA PARA FITA LED RGB | GAYA - TRANSPARENTE - 9055',15],
+["114199","UN",'ABRACADEIRA PARA FITA LED | GAYA 5050 - TRANSPARENTE - 9379',65],
+["114198","UN",'ABRACADEIRA PARA FITA LED | GAYA 5050 - TRANSPARENTE - 9440',5],
+["245732","UN",'ABRACADEIRA PARA FITA NEON | GAYA - 1469',186],
+["114222","UN",'ABRACADEIRA PARA FITA NEON | GAYA SLIM - TRANSPARENTE - 9134',10],
+["1200580","UN",'ACABAMENTO DE MONOCOMANDO 4 VIAS | DECA LEVEL - CROMADO - 4994.C26',4],
+["1200544","UN",'ACABAMENTO DE MONOCOMANDO 4 VIAS | DECA LEVEL - RED GOLD - 4994.GL26.RD',1],
+["1200635","UN",'ACABAMENTO DE MONOCOMANDO PARA CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA LEVEL - BLACK NOIR - 4993.BL26.CHU.NO',1],
+["1200636","UN",'ACABAMENTO DE MONOCOMANDO PARA CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA LEVEL - CROMADO - 4993.C26.CHU',9],
+["1200542","UN",'ACABAMENTO DE MONOCOMANDO PARA CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA LINK - CROMADO - 4993.C.LNK.CHU',2],
+["1200595","UN",'ACABAMENTO DE MONOCOMANDO PARA CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA UNIC - BLACK MATTE - 4993.BL90.CHU.MT',7],
+["1200563","UN",'ACABAMENTO DE MONOCOMANDO PARA CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA UNIC - CROMADO - 4993.C90.CHU',2],
+["1200658","UN",'ACABAMENTO DE MONOCOMANDO PARA CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA UNIC - GOLD - 4993.GL90.CHU',1],
+["1200565","UN",'ACABAMENTO DE MONOCOMANDO PARA CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA UNIC - RED GOLD - 4993.GL90.CHU.RD',2],
+["1200630","UN",'ACABAMENTO DE MONOCOMANDO PARA DUCHA HIGIENICA PARA ALTA E BAIXA PRESSAO | DECA DROP - CROMADO - 4993.C91.ACT',3],
+["1200613","UN",'ACABAMENTO DE MONOCOMANDO PARA DUCHA HIGIENICA PARA ALTA E BAIXA PRESSAO | DECA LEVEL - CROMADO - 4993.C26.ACT',9],
+["1200614","UN",'ACABAMENTO DE MONOCOMANDO PARA DUCHA HIGIENICA PARA ALTA E BAIXA PRESSAO | DECA SMART - CROMADO - 4993.C71.ACT',2],
+["1200597","UN",'ACABAMENTO DE MONOCOMANDO PARA DUCHA HIGIENICA PARA ALTA E BAIXA PRESSAO | DECA UNIC - RED GOLD - 4993.GL90.ACT.RD',4],
+["457270","UN",'ACABAMENTO DOCOLBASE 3/4" | DOCOL STILLO - NIQUEL ESCOVADO - 90008239044',5],
+["710799","PC",'ACABAMENTO DOCOLBASE 3/4" | DOCOL STILLO - OURO ESCOVADO - 90008239072',2],
+["710920","PC",'ACABAMENTO MONOCOMANDO CHUVEIRO ANTIVANDALISMO 3/4" | DOCOL EDGE - OURO ESCOVADO - 90008500072',1],
+["710915","PC",'ACABAMENTO MONOCOMANDO CHUVEIRO ANTIVANDALISMO 3/4" | DOCOL EDGE - OURO POLIDO - 90008500043',1],
+["456767","UN",'ACABAMENTO MONOCOMANDO CHUVEIRO E DUCHA HIGIENICA ALTA PRESSAO 1/2" | DOCOL NEW EDGE | MINIMA - CROMADO - 90009260006',18],
+["711453","PC",'ACABAMENTO MONOCOMANDO CHUVEIRO E DUCHA HIGIENICA | DOCOL MINIMA - OURO POLIDO - 90009260043',2],
+["457267","UN",'ACABAMENTO MONOCOMANDO PARA BANHEIRA E CHUVEIRO DE PAREDE | DOCOL LIFT - ONIX - 90008057156',3],
+["456582","UN",'ACABAMENTO MONOCOMANDO PARA BASE DE BAIXA PRESSAO 3/4" | DOCOL LIFT - CROMADO - 90008056006',12],
+["457108","UN",'ACABAMENTO MONOCOMANDO PARA BASE DE BAIXA PRESSAO | DOCOL CHESS | GALI - CROMADO - 90009349006',5],
+["456742","UN",'ACABAMENTO MONOCOMANDO PARA BASE DE BAIXA PRESSAO | DOCOL NEW EDGE | MINIMA - CROMADO - 90009259006',14],
+["711451","PC",'ACABAMENTO MONOCOMANDO PARA BASE DE BAIXA PRESSAO | DOCOL NEW EDGE | MINIMA - OURO ESCOVADO - 90009259072',2],
+["456867","UN",'ACABAMENTO MONOCOMANDO PARA BASE DECA | DOCOL LIFT - CROMADO - 90009618006',5],
+["457151","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO 3/4" ALTA VAZAO | DOCOL NEW EDGE | MINIMA - GRAFITE ESCOVADO - 90009259070',2],
+["457143","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO 3/4" ALTA VAZAO | DOCOL NEW EDGE | MINIMA - NIQUEL ESCOVADO - 90009259044',3],
+["711448","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO 3/4" ALTA VAZAO | DOCOL NEW EDGE | MINIMA - OURO POLIDO - 90009259043',2],
+["457113","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO ALTA VAZAO 3/4" DE PAREDE | DOCOL LIFT - ONIX - 90008056156',20],
+["456836","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL ARGON - CROMADO - 90008486006',1],
+["457190","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL ARGON - NIQUEL ESCOVADO - 90008486044',4],
+["457119","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL ARGON - OURO ESCOVADO - 90008486072',1],
+["457174","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL MIX&MATCH - CROMADO - 90009313006',2],
+["457251","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL MIX&MATCH - GRAFITE ESCOVADO - 90009313070',3],
+["457273","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL MIX&MATCH - NIQUEL ESCOVADO - 90009313044',2],
+["457205","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL NEXUS - CROMADO - 90005029006',2],
+["711077","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL VOUGAN - COBRE ESCOVADO - 90008856069',1],
+["711078","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL VOUGAN - GRAFITE ESCOVADO - 90008856070',1],
+["710919","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO BAIXA PRESSAO 3/4" | DOCOL | DOCOL EDGE - GRAFITE ESCOVADO - 90008500070',1],
+["710856","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL ARGON - GRAFITE ESCOVADO - 90008483070',2],
+["456587","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL ARGON - NIQUEL ESCOVADO - 90008483044',5],
+["710857","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL ARGON - OURO ESCOVADO - 90008483072',2],
+["457175","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL MIX&MATCH - CROMADO - 90009312006',3],
+["456784","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL MIX&MATCH - GRAFITE ESCOVADO - 90009312070',5],
+["711455","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL NEW EDGE | MINIMA - GRAFITE ESCOVADO - 90009260070',14],
+["457142","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL NEW EDGE | MINIMA - NIQUEL ESCOVADO - 90009260044',6],
+["711084","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL VOUGAN - COBRE ESCOVADO - 90008857069',1],
+["711085","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL VOUGAN - GRAFITE ESCOVADO - 90008857070',1],
+["711082","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL VOUGAN - NIQUEL ESCOVADO - 90008857044',1],
+["710911","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2" | DOCOL | DOCOL EDGE - GRAFITE ESCOVADO - 90008499070',4],
+["456747","UN","ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA 1/2 | DOCOL NEW EDGE | MINIMAA - OURO ESCOVADO - 90009260072",1],
+["456807","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA ALTA PRESSAO 1/2" | DOCOL ARGON - CROMADO - 90008483006',2],
+["457109","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA ALTA PRESSAO 1/2" | DOCOL CHESS | GALI - CROMADO - 90009350006',6],
+["457260","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA BASE DECA | DOCOL LIFT - ONIX - 90009618156',5],
+["456583","UN",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA DE ALTA PRESSAO 1/2" | DOCOL LIFT - CROMADO - 90008049006',37],
+["710907","PC",'ACABAMENTO MONOCOMANDO PARA CHUVEIRO E DUCHA HIGIENICA | DOCOL EDGE - OURO POLIDO - 90008499043',1],
+["1207231","UN",'ACABAMENTO MONOCOMANDO PARA DUCHA HIGIENICA ALTA E BAIXA PRESSAO | DECA LEVEL - BLACK MATTE - 4993.BL26.ACT.MT',11],
+["100710","UN",'ACABAMENTO PARA CAIXA DE DESCARGA EMBUTIDA HYDRA | DECA H QUADRA DUO - CROMADO - 4900.C.HQD.DUO',2],
+["730652","PC",'ACABAMENTO PARA CAIXA DE DESCARGA EMBUTIDA MECANICA | DECA YOU - BLACK MATTE - 4900.BL01.MT',2],
+["457334","UN",'ACABAMENTO PARA CAIXA DE DESCARGA EMBUTIDA | DOCOL SALVAGUA - INOX - 90009494016',1],
+["457323","UN",'ACABAMENTO PARA CAIXA DE DESCARGA EMBUTIDA | DOCOL SALVAGUA - NIQUEL ESCOVADO - 90009494044',1],
+["1201347","UN",'ACABAMENTO PARA MONOCOMANDO 4 VIAS | DECA LEVEL - BLACK NOIR - 4994.BL26.NO',2],
+["1208052","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO ALTA E BAIXA PRESSAO | DECA BETA - CROMADO - 4993.C109.CHU',8],
+["1207661","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA GAMA - CROMADO - 4993.C13.CHU',3],
+["1217346","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA LEVEL - BLACK MATTE - 4993.BL26.CHU.MT',3],
+["1201624","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA LEVEL - RED GOLD - 4993.GL26.CHU.RD',1],
+["1201421","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO PARA ALTA E BAIXA PRESSAO | DECA UNIC - GOLD MATTE - 4993.GL90.CHU.MT',1],
+["1217859","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO QUADRADO | DECA YOU - BLACK MATTE - 4993.BL105.CHU.MT',1],
+["1207492","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO QUADRADO | DECA YOU - CROMADO - 4993.C105.CHU',1],
+["1217359","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO QUADRADO | DECA YOU - DARK ANTRACITE - 4993.GF105.CHU.MT',7],
+["1217965","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO QUADRADO | DECA YOU - DYNAMIC WHITE - 4993.BR105.CHU.MT',3],
+["1207493","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO REDONDO | DECA YOU - CROMADO - 4993.C104.CHU',2],
+["1217964","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO REDONDO | DECA YOU - DYNAMIC WHITE - 4993.BR104.CHU.MT',1],
+["1217360","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO REDONDO | DECA YOU - INOX - 4993.INX104.CHU',1],
+["1217556","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO REDONDO | DECA YOU - SUMMER GOLD - 4993.SM104.CHU.MT',1],
+["1217399","UN",'ACABAMENTO PARA MONOCOMANDO DE CHUVEIRO | DECA UNIC - DARK ANTRACITE - 4993.GF90.CHU.MT',1],
+["1200541","UN",'ACABAMENTO PARA MONOCOMANDO DE DUCHA HIGIENICA PARA ALTA E BAIXA PRESSAO | DECA LEVEL - BLACK NOIR - 4993.BL26.ACT.NO',2],
+["1207261","UN",'ACABAMENTO PARA MONOCOMANDO4 VIAS | DECA LEVEL - BLACK MATTE - 4994.BL26.MT',1],
+["457310","UN",'ACABAMENTO PARA REGISTRO 1.1/2 DE PAREDE PARA LAVATORIO DOCOLBASE | DOCOL LIFT - ONIX - 90008048156',7],
+["1207467","UN",'ACABAMENTO PARA REGISTRO 1/2,3/4,1 PQ POLO | DECA - BLACK MATTE - 4900.BL33.PQ.MT',5],
+["1208677","UN",'ACABAMENTO PARA REGISTRO 1/2,3/4,1 PQ SOUL | DECA - BLACK MATTE - 4900.BL38.PQ.MT',8],
+["456766","UN",'ACABAMENTO PARA REGISTRO 3/4" DE PAREDE PARA LAVATORIO DOCOLBASE | DOCOL LIFT - ONIX - 90008047156',2],
+["710753","PC",'ACABAMENTO PARA REGISTRO BASE DECA 1/2", 3/4" E 1" | DOCOL LIFT - CROMADO - 90008119006',3],
+["457255","UN",'ACABAMENTO PARA REGISTRO BASE DECA 3/4" DE PAREDE PARA LAVATORIO | DOCOL LIFT - ONIX - 90008119156',27],
+["1217358","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" QUADRADO | DECA YOU - INOX - 4900.INX105.PQ',3],
+["1217371","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" QUADRADO | DECA YOU - SUMMER GOLD - 4900.SM105.PQ.MT',2],
+["1217367","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" REDONDO | DECA YOU - INOX - 4900.INX104.PQ',1],
+["730747","PC",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" REDONDO | DECA YOU - SUMMER GOLD - 4900.SM104.PQ.MT',2],
+["1200574","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA ASPEN - CROMADO - 4900.C35.PQ',10],
+["1200547","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA CUBO - CROMADO - 4900.C86.PQ',4],
+["1200638","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA DREAM - BLACK MATTE - 4900.BL87.PQ.MT',7],
+["1200641","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA DREAM - CROMADO - 4900.C87.PQ',7],
+["1217928","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA DREAM - DARK ANTRACITE - 4900.GF87.PQ.MT',1],
+["1200647","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA DREAM - RED GOLD - 4900.GL87.PQ.RD',3],
+["1200581","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA DUNA CLASSICA - BLACK MATTE - 4900.BL64.PQ.MT',1],
+["1217408","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA FLEX - CROMADO - 4900.C20.PQ',3],
+["1200609","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA FLEX PLUS - CROMADO - 4900.C21.PQ',2],
+["1200568","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA IZY PLUS - CROMADO - 4900.C24.PQ',3],
+["1201623","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA LEVEL - RED GOLD - 4900.GL26.PQ.RD',1],
+["1207423","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA PEROLA - SUMMER GOLD - 4900.SM108.PQ.MT',1],
+["1200566","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA POLO - BLACK NOIR - 4900.BL33.PQ.NO',6],
+["1201584","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA POLO - CROMADO - 4900.C33.PQ',8],
+["1200602","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA POLO - GOLD - 4900.GL33.PQ',6],
+["1200627","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA POLO - RED GOLD - 4900.GL33.PQ.RD',2],
+["1200599","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA SOUL - BLACK NOIR - 4900.BL38.PQ.NO',1],
+["1200601","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA SOUL - CROMADO - 4900.C38.PQ',6],
+["1200546","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA UNIC - BLACK MATTE - 4900.BL90.PQ.MT',5],
+["1217520","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA UNIC - DARK ANTRACITE - 4900.GF90.PQ.MT',1],
+["1200585","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA UNIC - GOLD - 4900.GL90.PQ',1],
+["1200617","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA UNIC - RED GOLD - 4900.GL90.PQ.RD',2],
+["1200639","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA WISH - CROMADO - 4900.C.WSH.PQ',2],
+["1200551","UN",'ACABAMENTO PARA REGISTRO DE GAVETA ATE 1" | DECA WISH - RED GOLD - 4900.GL.WSH.PQ.RD',4],
+["730338","PC",'ACABAMENTO PARA REGISTRO DE GAVETA DE 1.1/4" E 1.1/2" | DECA CUBO - BLACK MATTE - 4900.BL86.GD.MT',2],
+["1207422","UN",'ACABAMENTO PARA REGISTRO DE GAVETA E PRESSAO ATE 1" | DECA PEROLA - CROMADO - 4900.C108.PQ.MT',2],
+["730547","PC",'ACABAMENTO PARA REGISTRO DE PRESSAO 1/2" E 3/4" 1/2 VOLTA QUADRADO | DECA YOU - BLACK MATTE - 4916.BL105.PQ.MT',2],
+["1218034","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO 1/2" E 3/4" 1/2 VOLTA REDONDO | DECA YOU - DYNAMIC WHITE - 4916.BR104.PQ.MT',1],
+["1207494","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO 1/2" E 3/4" COM MECANISMO 1/2 VOLTA REDONDO | DECA YOU - CROMADO - 4916.C104.PQ',2],
+["1207495","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO 1/2" E 3/4" COM MECANISMO 1/2 VOLTA REDONDO | DECA YOU - INOX - 4916.INX104.PQ',2],
+["1200623","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO 1/2" E 3/4" COM MECANISMO 1/2 VOLTA | DECA DREAM - RED GOLD - 4916.GL87.PQ.RD',1],
+["1217353","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO 1/2" E 3/4" COM MECANISMO 1/2 VOLTA | DECA LEVEL - BLACK MATTE - 4916.BL26.PQ.MT',5],
+["1200589","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO 1/2" E 3/4" COM MECANISMO 1/2 VOLTA | DECA LK - CROMADO - 4916.C17.PQ',2],
+["1207496","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA REDONDO | DECA YOU - SUMMER GOLD - 4916.SM104.PQ.MT',1],
+["1200587","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA CUBO - BLACK MATTE - 4916.BL86.PQ.MT',5],
+["1200619","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA CUBO - CROMADO - 4916.C86.PQ',4],
+["1200618","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA DREAM - BLACK MATTE - 4916.BL87.PQ.MT',2],
+["1200651","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA DREAM - CROMADO - 4916.C87.PQ',11],
+["1200577","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA FLEX PLUS - CROMADO - 4916.C21.PQ',5],
+["1200605","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA POLO - CROMADO - 4916.C33.PQ',8],
+["1200606","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA POLO - RED GOLD - 4916.GL33.PQ.RD',3],
+["1200556","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA UNIC - BLACK MATTE - 4916.BL90.PQ.MT',2],
+["1200590","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA UNIC - CROMADO - 4916.C90.PQ',1],
+["1200594","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA UNIC - GOLD - 4916.GL90.PQ',2],
+["1200624","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" COM MECANISMO 1/2 VOLTA | DECA UNIC - RED GOLD - 4916.GL90.PQ.RD',2],
+["1206447","UN",'ACABAMENTO PARA REGISTRO DE PRESSAO ATE 1" | DECA CUBO - BLACK NOIR - 4916.BL86.PQ.NO',2],
+["457327","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2" 3/4" E 1" | DOCOL LOGGICA - CROMADO - 90004941006',22],
+["456744","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" A 1" | DOCOL LIFT - CROMADO - 90008047006',20],
+["710588","PC",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL CHESS - CROMADO - 90006659006',2],
+["456519","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL GALI - CROMADO - 90008000006',32],
+["457208","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL INVICTA - CROMADO - 90007231006',3],
+["457336","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL NEXT - CROMADO - 90006518006',1],
+["457321","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL NOVA TRIO - CROMADO - 90012579006',6],
+["466548","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL RIVA - CROMADO - 90004496006',64],
+["457135","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL STILLO - CROMADO - 90008239006',2],
+["711063","PC",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL VOUGAN - COBRE ESCOVADO - 90008853069',1],
+["711058","PC",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL VOUGAN - CROMADO - 90008853006',2],
+["711064","PC",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL VOUGAN - GRAFITE ESCOVADO - 90008853070',1],
+["711061","PC",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOL VOUGAN - NIQUEL ESCOVADO - 90008853044',1],
+["456804","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOLCITY - GRAFITE ESCOVADO - 90008771070',3],
+["457347","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 1/2", 3/4" E 1" | DOCOLSTILLO - GRAFITE ESCOVADO - 90008239070',10],
+["457216","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL ARGON - NIQUEL ESCOVADO - 90008479044',6],
+["711302","PC",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL MINIMA - CROMADO - 90009199006',1],
+["457165","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL MIX&MATCH - CROMADO - 90009264006',1],
+["466556","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL MIX&MATCH - GRAFITE ESCOVADO - 90009264070',2],
+["711438","PC",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL NEW EDGE - COBRE ESCOVADO - 90009257069',1],
+["456768","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL NEW EDGE - CROMADO - 90009257006',5],
+["457349","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL NEW EDGE - GRAFITE ESCOVADO - 90009257070',11],
+["457140","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL NEW EDGE - NIQUEL ESCOVADO - 90009257044',8],
+["456748","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL NEW EDGE - OURO ESCOVADO - 90009257072',2],
+["456562","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOL NOVA PERTUTTI - CROMADO - 90009040006',12],
+["457126","UN",'ACABAMENTO PARA REGISTRO DOCOLBASE 3/4" | DOCOLSTILLO - OURO POLIDO - 90008239043',13],
+["710628","PC",'ACABAMENTO PARA SELETOR INTEGRADO COM DUCHA MANUAL 3/4" | DOCOL RESORT - CROMADO - 90006919006',1],
+["457318","UN",'ACABAMENTO PARA VALVULA DE DESCARGA DE PAREDE | DOCOL FLAT - COBRE ESCOVADO - 90009317069',1],
+["466555","UN",'ACABAMENTO PARA VALVULA DE DESCARGA DE PAREDE | DOCOL FLAT - CROMADO - 90009317006',14],
+["457180","UN",'ACABAMENTO PARA VALVULA DE DESCARGA DE PAREDE | DOCOL FLAT - GRAFITE ESCOVADO - 90009317070',1],
+["457234","UN",'ACABAMENTO PARA VALVULA DE DESCARGA DE PAREDE | DOCOL FLAT - NIQUEL ESCOVADO - 90009317044',2],
+["457120","UN",'ACABAMENTO PARA VALVULA DE DESCARGA DE PAREDE | DOCOL FLAT - OURO ESCOVADO - 90009317072',2],
+["711517","PC",'ACABAMENTO PARA VALVULA DE DESCARGA DE PAREDE | DOCOL FLAT - OURO POLIDO - 90009317043',1],
+["457224","UN",'ACABAMENTO PARA VALVULA DE DESCARGA SALVAGUA | DOCOL BOX - CROMADO - 90005668006',2],
+["466504","UN",'ACABAMENTO PARA VALVULA DE DESCARGA | DOCOL CLASSICA - CROMADO - 90015000006',3],
+["457158","UN",'ACABAMENTO PARA VALVULA DE DESCARGA | DOCOL LUXUS - CROMADO - 90015005006',1],
+["457114","UN",'ACABAMENTO VALVULA DE DESCARGA DE PAREDE PARA LAVATORIO | DOCOLFLAT - ONIX - 90009317156',5],
+["260335","KT",'ACESSORIO PARA PENDENTE | GAYA MINI MAG - PRETO - 3331',5],
+["711931","PC",'ACIONAMENTO DE LAVATORIO PARA MONOCOMANDO | DOCOL MIX&MATCH - CROMADO - 90017396006',1],
+["1217354","UN",'ACIONAMENTO DE MISTURADOR DE MESA QUADRADO | DECA YOU - DARK ANTRACITE - 4992.GF105.MT',1],
+["1217409","UN",'ACIONAMENTO DE MISTURADOR DE MESA QUADRADO | DECA YOU - MARROM FOSCO - 4992.MR105.MT',1],
+["1217861","UN",'ACIONAMENTO DE MISTURADOR DE MESA QUADRADO | DECA YOU - SUMMER GOLD - 4992.SM105.MT',1],
+["1217411","UN",'ACIONAMENTO DE MISTURADOR DE MESA REDONDO | DECA YOU - DYNAMIC GOLD - 4992.LS104.MT',1],
+["1217410","UN",'ACIONAMENTO DE MISTURADOR DE MESA REDONDO | DECA YOU - DYNAMIC LILAC - 4992.LV104.MT',1],
+["1217412","UN",'ACIONAMENTO DE MISTURADOR DE MESA REDONDO | DECA YOU - SUMMER GOLD - 4992.SM104.MT',1],
+["457161","UN",'ACIONAMENTO DE TORNEIRA PARA LAVATORIO | DOCOL MIX&MATCH - CROMADO - 90009171006',10],
+["457024","UN",'ACIONAMENTO DE TORNEIRA PARA LAVATORIO | DOCOL MIX&MATCH - GRAFITE ESCOVADO - 90009171070',9],
+["457192","UN",'ACIONAMENTO DE TORNEIRA PARA LAVATORIO | DOCOL MIX&MATCH - NIQUEL ESCOVADO - 90009171044',11],
+["100713","UN",'ACIONAMENTO JOYSTICK PARA MONOCOMANDO DE MESA PARA COZINHA | DECA YOU - INOX - 4992.INX99.03',1],
+["711248","PC",'ACIONAMENTO MISTURADOR PARA LAVATORIO | DOCOL MIX&MATCH - CROMADO - 90009170006',10],
+["456777","UN",'ACIONAMENTO MISTURADOR PARA LAVATORIO | DOCOL MIX&MATCH - GRAFITE ESCOVADO - 90009170070',9],
+["457235","UN",'ACIONAMENTO MISTURADOR PARA LAVATORIO | DOCOL MIX&MATCH - NIQUEL ESCOVADO - 90009170044',9],
+["457171","UN",'ACIONAMENTO MONOCOMANDO JOYSTICK PARA LAVATORIO | DOCOL MIX&MATCH - CROMADO - 90009193006',1],
+["456803","UN",'ACIONAMENTO MONOCOMANDO JOYSTICK PARA LAVATORIO | DOCOL MIX&MATCH - GRAFITE ESCOVADO - 90009193070',9],
+["457390","UN",'ACIONAMENTO MONOCOMANDO JOYSTICK PARA LAVATORIO | DOCOL MIX&MATCH - NIQUEL ESCOVADO - 90009193044',10],
+["1217985","UN",'ACIONAMENTO PARA MISTURADOR DE MESA QUADRADO | DECA YOU - BLACK MATTE - 4992.BL105.MT',2],
+["1217984","UN",'ACIONAMENTO PARA MISTURADOR DE MESA QUADRADO | DECA YOU - INOX - 4992.INX105',1],
+["1217370","UN",'ACIONAMENTO PARA MISTURADOR DE MESA REDONDO | DECA YOU - BLACK MATTE - 4992.BL104.MT',6],
+["1217362","UN",'ACIONAMENTO PARA MISTURADOR DE MESA REDONDO | DECA YOU - INOX - 4992.INX104',2],
+["1206940","UN",'ACIONAMENTO PARA MONOCOMANDO DE MESA PARA COZINHA FLAT | DECA YOU - BLACK MATTE - 4992.BL99.MT.02',1],
+["1207505","UN",'ACIONAMENTO PARA MONOCOMANDO DE MESA PARA COZINHA WAVE | DECA YOU - BLACK MATTE - 4992.BL99.MT.01',2],
+["1206432","UN",'ACIONAMENTO PARA MONOCOMANDO DE MESA PARA COZINHA WAVE | DECA YOU - CROMADO - 4992.C99.01',1],
+["1217484","UN",'ACIONAMENTO PARA MONOCOMANDO DE MESA PARA LAVATORIO QUADRADO | DECA YOU - BLACK MATTE - 4990.BL105.MT',1],
+["1217867","UN",'ACIONAMENTO PARA MONOCOMANDO DE MESA PARA LAVATORIO QUADRADO | DECA YOU - CROMADO - 4990.C105',1],
+["1217414","UN",'ACIONAMENTO PARA TORNEIRA DE MESA PARA LAVATORIO QUADRADO | DECA YOU - DYNAMIC BLUE - 4991.AZ105.MT',1],
+["1217420","UN",'ACIONAMENTO PARA TORNEIRA DE MESA PARA LAVATORIO REDONDO | DECA YOU - DARK ANTRACITE - 4991.GF104.MT',1],
+["1217418","UN",'ACIONAMENTO PARA TORNEIRA DE MESA PARA LAVATORIO REDONDO | DECA YOU - DYNAMIC WHITE - 4991.BR104.MT',4],
+["711255","PC",'ACIONAMENTO TORNEIRA PARA LAVATORIO DE MESA | DOCOL MIX&MATCH - OURO POLIDO - 90009171043',1],
+["100714","UN",'ACIONAMENTO WAVE PARA MONOCOMANDO DE MESA PARA COZINHA | DECA YOU - INOX - 4992.INX99.01',2],
+["255478","UN",'ACRILICO PARA PERFIL COM FUROS PARA SPOTS 100X37MM | NEWLINE FIT40 - TRANSPARENTE - AC00024',9],
+["720191","UN",'ACTIVE 20 (S/ TEC)',11],
+["720192","UN",'ACTIVE 20 BUS',6],
+["9600748","UN",'AMPLIFICADOR PARA FITA LED RGBW | STELLA - STH6889',1],
+["1200329","UN",'ANEL DE VEDACAO PARA BACIAS | DECANEL - AZUL - 1100.AV.90.01',16],
+["1217769","UN",'AQUECEDOR DE TOALHAS F.O GRANDE PREMIUM | METALWORKS QUADA - BRANCO BRILHANTE - 19.TQ04.BB',1],
+["1217833","UN",'AQUECEDOR DE TOALHAS F.O PEQUENO PREMIUM | METALWORKS QUADA - INOX POLIDO - 19.TQ02.IP',2],
+["1217784","UN",'AQUECEDOR DE TOALHAS F.O PEQUENO PREMIUM | METALWORKS RUBY - INOX POLIDO - 19.TY02.IP',3],
+["1217810","UN",'AQUECEDOR DE TOALHAS HORIZONTAL | METALWORKS JADE - INOX POLIDO - 19.TJ15.IP',3],
+["302112","UN",'AQUECEDOR DE TOALHAS PEQUENO PREMIUM | METALWORKS QUADA - NIQUEL ESCOVADO - 19.TQ01.NE',1],
+["1217966","UN",'AQUECEDOR DE TOALHAS PEQUENO PREMIUM | METALWORKS RUBY - COBRE POLIDO - 19.TY01.CP',1],
+["1217815","UN",'AQUECEDOR DE TOALHAS PEQUENO PREMIUM | METALWORKS RUBY - INOX POLIDO - 19.TY01.IP',3],
+["1217968","UN",'AQUECEDOR DE TOALHAS ROSTO HORIZONTAL | METALWORKS JADE - OURO POLIDO - 20.TJ01.OP',1],
+["1217967","UN",'AQUECEDOR DE TOALHAS ROSTO VERTICAL | METALWORKS JADE - PRETO FOSCO - 20.TJ02.PF',1],
+["275396","UN",'ARANDELA 12W 3000K 1200LM BIVOLT IP65 16X6CM | GAYA ECLIPSE - PRETO - 3144',5],
+["275397","UN",'ARANDELA 12W 3000K 1200LM IP65 16X6CM | GAYA ECLIPSE - BRANCO - 3145',17],
+["207203","UN",'ARANDELA 1XE27 | GERMANY GARTEN - BRANCO FOSCO - 14101100-11',2],
+["207204","UN",'ARANDELA 1XE27 | GERMANY GARTEN - PRETO FOSCO - 14101100-16',4],
+["245871","UN",'ARANDELA 2F 2A 2XG9 13CM | GERMANY FUSSEN - BRANCO FOSCO - 15140410-11',3],
+["245872","UN",'ARANDELA 2F 2A 2XG9 13CM | GERMANY FUSSEN - MARROM GOLD - 15140410-12',4],
+["245873","UN",'ARANDELA 2F 2A 2XG9 13CM | GERMANY FUSSEN - PRETO FOSCO - 15140410-16',2],
+["245874","UN",'ARANDELA 2F 2A 2XG9 13CM | GERMANY FUSSEN - PRETO TEXTURA - 15140410-51',1],
+["245310","UN",'ARANDELA 2F 2XG9 130MM | GERMANY FUSSEN - PRETO FOSCO - 15130410-16',1],
+["245864","UN",'ARANDELA 2F 2XG9 13CM | GERMANY FUSSEN - BRANCO FOSCO - 15130410-11',3],
+["245865","UN",'ARANDELA 2F 2XG9 13CM | GERMANY FUSSEN - MARROM GOLD - 15130410-12',4],
+["245868","UN",'ARANDELA 2F 3A 2XG9 13CM | GERMANY FUSSEN - MARROM GOLD - 15133410-12',4],
+["245869","UN",'ARANDELA 2F 3A 2XG9 13CM | GERMANY FUSSEN - PRETO FOSCO - 15133410-16',3],
+["245870","UN",'ARANDELA 2F 3A 2XG9 13CM | GERMANY FUSSEN - PRETO TEXTURA - 15133410-51',3],
+["245903","UN",'ARANDELA 3W 3000K 230LM BIVOLT IP65 10X3CM | GAYA ECLIPSE - PRETO - 3192',5],
+["275524","UN",'ARANDELA 4 FACHO AJUSTAVEL 4W 3000K 200LM BIVOLT IP65 12X12X3CM | GAYA TREVO - PRETO - 3194',5],
+["275414","UN",'ARANDELA 4W 3000K 140LM BIVOLT IP65 8.3X12.3X3CM | GAYA CUBE SLIM - BRANCO - 9682',5],
+["275413","UN",'ARANDELA 4W 3000K 140LM BIVOLT IP65 8.3X12.3X3CM | GAYA CUBE SLIM - PRETO - 9683',5],
+["106202","UN",'ARANDELA 5W 3000K 160LM BIVOLT IP65 4.8X6.15X12CM | GAYA FOCUS SLIM - BRANCO - 9774',8],
+["106223","UN",'ARANDELA 5W 3000K 160LM BIVOLT IP65 4.8X6.15X12CM | GAYA FOCUS SLIM - PRETO - 9773',7],
+["275415","UN",'ARANDELA 5W 3000K IP65 4,2X12X3,2CM | GAYA FOCUS SLIM - MARROM - 3142',1],
+["106224","UN",'ARANDELA 8W 3000K 300LM BIVOLT IP65 20X10X3.1CM | GAYA CUBE SLIM - PRETO - 9775',7],
+["275416","UN",'ARANDELA 8W 3000K 550LM BIVOLT IP65 12X12X3.2CM | GAYA HAMSA - PRETO - 3148',4],
+["275399","UN",'ARANDELA 8W 3000K IP65 20X10X3.1CM | GAYA CUBE SLIM - MARROM - 3143',5],
+["963146","UN",'ARANDELA ACO COLONIAL QUADRADA VIDRO PONTILHADO 1XE27 | BLUMENAU - COBRE LISO - 102900-05',2],
+["9600570","UN",'ARANDELA COM DEFLETOR 2F 1XG9 131MM | GERMANY FRANKFURT - BRANCO FOSCO - 15100200-11',2],
+["207216","UN",'ARANDELA COM DEFLETOR 2F 1XG9 IP43 131MM | GERMANY FRANKFURT - PRETO - 15100200-16',3],
+["275435","UN",'ARANDELA FACHO DUPLO AJUSTAVEL 2W 3000K IP65 | GAYA MINI FOCUS - BRANCO - 3154',1],
+["275436","UN",'ARANDELA FACHO DUPLO AJUSTAVEL 2W 3000K IP65 | GAYA MINI FOCUS - PRETO - 3155',2],
+["275410","UN",'ARANDELA FACHO DUPLO AJUSTAVEL 4W 3000K IP65 12X12X5.2CM | GAYA FOCUS - PRETO - 9681',5],
+["245176","UN",'ARANDELA LED 10W 3000K IP54 170X135X85MM | GERMANY MUNICH - PRETO - 19450316',2],
+["245724","UN",'ARANDELA LED 10W 3000K IP65 620LM | GAYA MAGIK - PRETO - 3122',2],
+["265107","UN",'ARANDELA LED 2F 8W 3000K 480LM IP65 | STELLA EFFEKT - BRANCO - STH6730/30',2],
+["245876","UN",'ARANDELA LED 2W 3000K 150LM BIVOLT IP20 | GAYA LEYA - BRANCO - 3121',2],
+["245877","UN",'ARANDELA LED 2W 3000K 150LM BIVOLT IP20 | GAYA LEYA - PRETO - 3120',3],
+["9600993","UN",'ARANDELA LED 2W 3000K | GERMANY BUMP - CINZA CONCRETO - 190033014',1],
+["9600370","UN",'ARANDELA LED 4W 3000K 240LM IP65 | STELLA EFFEKT- BRANCO - STH6734/30',4],
+["9600866","UN",'ARANDELA LED 4W 3000K BIVOLT IP65 80MM | BLUMENAU MINCE - BRANCO - 20453011',16],
+["962156","UN",'ARANDELA LED 4W 6500K IP65 BIVOLT 80MM | GERMANY MINCE - BRANCO - 20456011',1],
+["202098","UN",'ARANDELA LED 6W 3000K | BLUMENAU ARC - BRANCO - 19800311',1],
+["9601446","UN",'ARANDELA LED CLEAN ALETADA 6W 3000K | BLUMENAU - BRANCO - 23633004-3',12],
+["9601667","UN",'ARANDELA LED QUADRADA 3W 3000K IP65 | BLUMENAU CLEAN - BRANCO - 23533004-3',9],
+["9601350","UN",'ARANDELA LED QUADRADA 3W 3000K IP65 | BLUMENAU CLEAN - MARROM GOLD - 23533015-25',11],
+["253278","UN",'ARANDELA LED QUADRADA 3W 3000K | BLUMENAU CLEAN - PRETO - 23533001-28',10],
+["9601628","UN",'ARANDELA LED USB 3W 4100K BIVOLT | BLUMENAU FLAT - 57034154',1],
+["106200","UN",'ARANDELA RED/QUAD LED 6W 3000K 18X14CM | GAYA - BRANCO - 9670',3],
+["106203","UN",'ARANDELA REDONDA 6W 3000K 16X17.5CM | GAYA - BRANCO - 9672',3],
+["106201","UN",'ARANDELA RETANGULAR LED 3W 3000K 10X5CM | GAYA - BRANCO - 9671',3]
+  ];
+
+  // ---------- helpers ----------
+  function normalize(s){
+    return (s===undefined||s===null?"":String(s)).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim();
+  }
+  function parseBRNumber(s){
+    if(typeof s === "number") return s;
+    s = (s===undefined||s===null?"0":String(s)).trim();
+    if(s==="") return 0;
+    s = s.replace(/\.(?=\d{3}(\D|$))/g,"").replace(",", ".");
+    var n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+  }
+  function fmt(n){
+    var v = Math.round(n*100)/100;
+    return (v % 1 === 0) ? String(v) : v.toFixed(2).replace(".", ",");
+  }
+  function el(tag, attrs, children){
+    var e = document.createElement(tag);
+    attrs = attrs || {};
+    Object.keys(attrs).forEach(function(k){
+      if(k==="html"){ e.innerHTML = attrs[k]; }
+      else if(k.indexOf("on")===0){ e.addEventListener(k.slice(2), attrs[k]); }
+      else if(k==="class"){ e.className = attrs[k]; }
+      else { e.setAttribute(k, attrs[k]); }
+    });
+    (children||[]).forEach(function(c){ if(c!=null) e.appendChild(typeof c==="string" ? document.createTextNode(c) : c); });
+    return e;
+  }
+
+  function save(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORE_KEY);
+      if(raw){ var parsed = JSON.parse(raw); if(parsed && Array.isArray(parsed.items)){ state = parsed; return true; } }
+    }catch(e){}
+    return false;
+  }
+
+  function itemsFromRows(rows){
+    return rows.map(function(r){
+      return { codigo:String(r.codigo).trim(), un:(r.un||"UN").trim()||"UN", produto:r.produto.trim(), esperado:parseBRNumber(r.qtd), recebido:0, updatedAt:0 };
+    }).filter(function(it){ return it.codigo || it.produto; });
+  }
+
+  function loadSeed(){
+    state = {
+      items: SEED_DATA.map(function(r){ return { codigo:r[0], un:r[1], produto:r[2], esperado:r[3], recebido:0, updatedAt:0 }; }),
+      extras: [],
+      importedAt: new Date().toISOString(),
+      sourceLabel: "Dados de exemplo (amostra do PDF enviado — " + SEED_DATA.length + " itens)"
+    };
+    save();
+    scheduleSync();
+  }
+
+  // ---------- import parsing ----------
+  function parseImportText(text){
+    var lines = text.split(/\r\n|\n|\r/).filter(function(l){ return l.trim().length; });
+    if(!lines.length) return [];
+    var first = lines[0];
+    var delim = "\t";
+    if(first.split("\t").length < 2){
+      if(first.split(";").length >= 2) delim = ";";
+      else if(first.split(",").length >= 2) delim = ",";
+    }
+    var rows = lines.map(function(l){ return l.split(delim); });
+    var headerNorm = rows[0].map(normalize);
+    var map = { codigo:-1, un:-1, produto:-1, qtd:-1 };
+    headerNorm.forEach(function(h,i){
+      if(/^cod/.test(h)) map.codigo = i;
+      else if(/^un\.?$|unidade/.test(h)) map.un = i;
+      else if(/produto|descri/.test(h)) map.produto = i;
+      else if(/total|qtd|quantidade|esperad|recebid/.test(h)) map.qtd = i;
+    });
+    var hasHeader = map.codigo>=0 || map.produto>=0 || map.qtd>=0;
+    var dataRows = hasHeader ? rows.slice(1) : rows.slice(0);
+    if(!hasHeader){
+      var cols = rows[0].length;
+      if(cols>=4){ map.codigo=cols-4; map.un=cols-3; map.produto=cols-2; map.qtd=cols-1; }
+      else if(cols===3){ map.codigo=0; map.produto=1; map.qtd=2; map.un=-1; }
+      else { map.codigo=0; map.produto=0; map.qtd=1; }
+    }
+    var out = [];
+    dataRows.forEach(function(cols){
+      if(!cols || cols.length<1) return;
+      var codigo = (map.codigo>=0 ? (cols[map.codigo]||"") : "").trim();
+      var un = (map.un>=0 ? (cols[map.un]||"") : "").trim() || "UN";
+      var produto = (map.produto>=0 ? (cols[map.produto]||"") : "").trim();
+      var qtd = (map.qtd>=0 ? (cols[map.qtd]||"0") : "0").trim();
+      if(!codigo && !produto) return;
+      out.push({ codigo:codigo, un:un, produto:produto, qtd:qtd });
+    });
+    return out;
+  }
+
+  // ---------- shared room sync (GitHub Gist as backend) ----------
+  var GIST_TOKEN_KEY = "wh_gist_token";
+  var GIST_ID_KEY = "wh_gist_id";
+  var GIST_FILE = "conferencia-estado.json";
+  var SYNC_POLL_MS = 8000;
+  var syncStatus = { syncing:false, lastSyncAt:null, error:null };
+  var pushTimer = null;
+  var pollTimer = null;
+
+  function getGistToken(){ return localStorage.getItem(GIST_TOKEN_KEY) || ""; }
+  function getGistId(){ return localStorage.getItem(GIST_ID_KEY) || ""; }
+  function isConnected(){ return !!(getGistToken() && getGistId()); }
+  function makeId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+  function ghHeaders(){
+    return { "Authorization":"token " + getGistToken(), "Accept":"application/vnd.github+json", "Content-Type":"application/json" };
+  }
+
+  function mergeState(local, remote){
+    if(!remote || !remote.items) return local;
+    if(!local || !local.items || !local.items.length) return remote;
+    var localImp = local.importedAt ? (Date.parse(local.importedAt)||0) : 0;
+    var remoteImp = remote.importedAt ? (Date.parse(remote.importedAt)||0) : 0;
+    var base = remoteImp >= localImp ? remote : local;
+    var other = base === remote ? local : remote;
+    var byCode = {};
+    base.items.forEach(function(it){ byCode[it.codigo] = it; });
+    (other.items||[]).forEach(function(it){
+      var b = byCode[it.codigo];
+      if(b && (it.updatedAt||0) > (b.updatedAt||0)){ b.recebido = it.recebido; b.updatedAt = it.updatedAt; }
+    });
+    var extrasByKey = {};
+    (base.extras||[]).forEach(function(ex){ extrasByKey[ex.id || (ex.codigo+"|"+ex.produto)] = ex; });
+    (other.extras||[]).forEach(function(ex){
+      var key = ex.id || (ex.codigo+"|"+ex.produto);
+      var e = extrasByKey[key];
+      if(!e){ extrasByKey[key] = ex; }
+      else if((ex.updatedAt||0) > (e.updatedAt||0)){ e.recebido = ex.recebido; e.updatedAt = ex.updatedAt; }
+    });
+    base.extras = Object.keys(extrasByKey).map(function(k){ return extrasByKey[k]; });
+    return base;
+  }
+
+  function setSyncStatus(patch){
+    for(var k in patch){ if(Object.prototype.hasOwnProperty.call(patch,k)) syncStatus[k] = patch[k]; }
+    renderSyncBadge();
+  }
+
+  function pushState(){
+    if(!isConnected()) return;
+    setSyncStatus({ syncing:true, error:null });
+    var body = { files:{} };
+    body.files[GIST_FILE] = { content: JSON.stringify(state) };
+    fetch("https://api.github.com/gists/" + getGistId(), { method:"PATCH", headers:ghHeaders(), body:JSON.stringify(body) })
+      .then(function(res){ if(!res.ok) throw new Error("HTTP " + res.status); setSyncStatus({ syncing:false, lastSyncAt:new Date(), error:null }); })
+      .catch(function(err){ setSyncStatus({ syncing:false, error:"Falha ao enviar para a sala: " + err.message }); });
+  }
+
+  function scheduleSync(){
+    if(!isConnected()) return;
+    if(pushTimer) clearTimeout(pushTimer);
+    pushTimer = setTimeout(pushState, 900);
+  }
+
+  function pullState(silent){
+    if(!isConnected()) return Promise.resolve();
+    if(!silent) setSyncStatus({ syncing:true });
+    return fetch("https://api.github.com/gists/" + getGistId(), { headers:ghHeaders() })
+      .then(function(res){ if(!res.ok) throw new Error("HTTP " + res.status); return res.json(); })
+      .then(function(gist){
+        var file = gist.files && gist.files[GIST_FILE];
+        if(!file || !file.content) return;
+        var remote = JSON.parse(file.content);
+        var before = JSON.stringify(state);
+        state = mergeState(state, remote);
+        var after = JSON.stringify(state);
+        save();
+        setSyncStatus({ syncing:false, lastSyncAt:new Date(), error:null });
+        if(before !== after){
+          var scanEl = document.getElementById("scanInput");
+          var busy = (scanEl && scanEl.value.trim()) || document.querySelector(".confirm") || document.querySelector(".not-found");
+          if(!busy) renderAll();
+        }
+      })
+      .catch(function(err){ setSyncStatus({ syncing:false, error:"Falha ao sincronizar: " + err.message }); });
+  }
+
+  function startSyncLoop(){
+    if(pollTimer) clearInterval(pollTimer);
+    if(!isConnected()) return;
+    pullState(true);
+    pollTimer = setInterval(function(){ pullState(true); }, SYNC_POLL_MS);
+  }
+
+  document.addEventListener("visibilitychange", function(){
+    if(!document.hidden && isConnected()) pullState(true);
+  });
+
+  function renderSyncBadge(){
+    var b = document.getElementById("syncBadge");
+    if(!b) return;
+    var connected = isConnected();
+    var cls = !connected ? "off" : (syncStatus.syncing ? "syncing" : (syncStatus.error ? "off" : "on"));
+    var label = !connected ? "Somente local (sem sala conectada)"
+      : (syncStatus.syncing ? "Sincronizando…"
+      : (syncStatus.error ? syncStatus.error
+      : "Sincronizado com a sala" + (syncStatus.lastSyncAt ? " · " + syncStatus.lastSyncAt.toLocaleTimeString("pt-BR") : "")));
+    b.innerHTML = "";
+    b.appendChild(el("button",{class:"sync-pill "+cls, onclick:openRoomModal},[el("span",{class:"dot"}), label]));
+  }
+
+  function closeRoomModal(){
+    var overlay = document.getElementById("roomModalOverlay");
+    if(overlay) overlay.remove();
+  }
+
+  function createRoom(){
+    var token = document.getElementById("roomToken").value.trim();
+    if(!token){ alert("Cole um token de acesso do GitHub (com o escopo gist) antes de continuar."); return; }
+    localStorage.setItem(GIST_TOKEN_KEY, token);
+    setSyncStatus({ syncing:true, error:null });
+    var files = {}; files[GIST_FILE] = { content: JSON.stringify(state) };
+    fetch("https://api.github.com/gists", {
+      method:"POST",
+      headers:{ "Authorization":"token "+token, "Accept":"application/vnd.github+json", "Content-Type":"application/json" },
+      body: JSON.stringify({ description:"Conferência de Transferência — sala compartilhada", public:false, files:files })
+    }).then(function(res){ if(!res.ok) throw new Error("HTTP " + res.status); return res.json(); })
+      .then(function(gist){
+        localStorage.setItem(GIST_ID_KEY, gist.id);
+        setSyncStatus({ syncing:false, lastSyncAt:new Date(), error:null });
+        startSyncLoop();
+        renderAll();
+        closeRoomModal(); openRoomModal();
+      }).catch(function(err){
+        setSyncStatus({ syncing:false, error:null });
+        alert("Não consegui criar a sala. Confira se o token tem o escopo 'gist' e tente novamente.\n\n" + err.message);
+      });
+  }
+
+  function connectRoom(){
+    var token = document.getElementById("roomToken").value.trim();
+    var id = document.getElementById("roomId").value.trim();
+    if(!token || !id){ alert("Informe o token de acesso e o código da sala."); return; }
+    localStorage.setItem(GIST_TOKEN_KEY, token);
+    localStorage.setItem(GIST_ID_KEY, id);
+    pullState(false).then(function(){
+      startSyncLoop();
+      renderAll();
+      closeRoomModal(); openRoomModal();
+    });
+  }
+
+  function disconnectRoom(){
+    if(!confirm("Desconectar desta sala? A conferência deste computador passa a ficar só local, sem sincronizar com os outros.")) return;
+    localStorage.removeItem(GIST_TOKEN_KEY);
+    localStorage.removeItem(GIST_ID_KEY);
+    if(pollTimer) clearInterval(pollTimer);
+    setSyncStatus({ lastSyncAt:null, error:null });
+    closeRoomModal();
+    renderAll();
+  }
+
+  function openRoomModal(){
+    closeRoomModal();
+    var overlay = el("div",{class:"modal-overlay", id:"roomModalOverlay", onclick:function(e){ if(e.target.id==="roomModalOverlay") closeRoomModal(); }});
+    var card = el("div",{class:"modal-card"});
+    card.appendChild(el("button",{class:"close-x", onclick:closeRoomModal},["✕"]));
+    card.appendChild(el("h3",{},["Sala compartilhada"]));
+    if(isConnected()){
+      card.appendChild(el("p",{},["Este computador está sincronizando com a sala abaixo. Compartilhe o código com os outros computadores (cada um precisa do seu próprio token de acesso) para todos conferirem juntos, ao vivo."]));
+      card.appendChild(el("div",{},[el("span",{class:"room-code"},[getGistId()])]));
+      card.appendChild(el("div",{class:"row"},[
+        el("button",{class:"btn btn-sm",onclick:function(){ if(navigator.clipboard){ navigator.clipboard.writeText(getGistId()); } }},["Copiar código"]),
+        el("button",{class:"btn btn-sm",onclick:function(){ pullState(false); }},["Sincronizar agora"]),
+        el("button",{class:"btn btn-sm btn-ghost",style:"color:var(--danger)",onclick:disconnectRoom},["Desconectar"])
+      ]));
+    } else {
+      card.appendChild(el("p",{},[
+        "Conecte este computador a uma sala para que a conferência fique igual em todos os PCs. Você vai precisar de um token de acesso pessoal do GitHub com o escopo ",
+        el("code",{},["gist"]), " (crie em github.com → Settings → Developer settings → Personal access tokens → Generate new token, marcando só a caixa 'gist')."
+      ]));
+      card.appendChild(el("label",{},["Token de acesso (GitHub, escopo gist)"]));
+      card.appendChild(el("input",{type:"password", id:"roomToken", placeholder:"ghp_..."}));
+      card.appendChild(el("label",{},["Código da sala — deixe em branco para criar uma sala nova"]));
+      card.appendChild(el("input",{type:"text", id:"roomId", placeholder:"cole aqui o código recebido de outro computador"}));
+      card.appendChild(el("div",{class:"row"},[
+        el("button",{class:"btn btn-primary btn-sm",onclick:function(){
+          var id = document.getElementById("roomId").value.trim();
+          if(id) connectRoom(); else createRoom();
+        }},["Conectar / criar sala"])
+      ]));
+    }
+    if(syncStatus.error){ card.appendChild(el("p",{style:"color:var(--danger);"},[syncStatus.error])); }
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+  }
+
+  // ---------- app state ----------
+  var ui = {
+    filter: "todos",
+    tableSearch: "",
+    matchedItem: null,
+    matchedIsExtra: false,
+    lastQuery: ""
+  };
+
+  function statusOf(it){
+    if(it.recebido<=0) return "faltante";
+    if(it.recebido===it.esperado) return "correto";
+    return "divergente";
+  }
+  function statusLabel(s){
+    return { correto:"Correto", divergente:"Divergência", faltante:"Faltante", extra:"Não previsto" }[s] || s;
+  }
+
+  function counts(){
+    var c = { total: state.items.length, conferidos:0, correto:0, divergente:0, faltante:0, extra: state.extras.length };
+    state.items.forEach(function(it){
+      var s = statusOf(it);
+      c[s]++;
+      if(it.recebido>0) c.conferidos++;
+    });
+    return c;
+  }
+
+  // ---------- rendering ----------
+  var mainEl = document.getElementById("main");
+  var topActions = document.getElementById("topActions");
+  var subtitle = document.getElementById("subtitle");
+
+  function hasData(){ return state.items.length>0 || state.extras.length>0; }
+
+  function renderTopActions(){
+    topActions.innerHTML = "";
+    topActions.appendChild(el("button",{class:"btn btn-sm",onclick:openRoomModal},["🔗 Sala compartilhada"]));
+    if(hasData()){
+      topActions.appendChild(el("button",{class:"btn btn-sm btn-primary",onclick:exportPDF},["🖨 Exportar PDF"]));
+      topActions.appendChild(el("button",{class:"btn btn-sm",onclick:exportCSV},["⬇ Exportar CSV"]));
+      topActions.appendChild(el("button",{class:"btn btn-sm",onclick:function(){
+        if(confirm("Isso vai zerar as quantidades recebidas e manter a lista esperada. Continuar?")){
+          var t = Date.now();
+          state.items.forEach(function(it){ it.recebido=0; it.updatedAt=t; });
+          state.extras = [];
+          save(); scheduleSync(); renderAll();
+        }
+      }},["↺ Nova conferência"]));
+      topActions.appendChild(el("button",{class:"btn btn-sm btn-ghost",onclick:function(){
+        if(confirm("Isso vai apagar a lista atual e as conferências feitas neste computador. Continuar?")){
+          state = {items:[], extras:[], importedAt:null, sourceLabel:""};
+          save(); ui.filter="todos"; ui.tableSearch=""; renderAll();
+        }
+      }},["Importar nova lista"]));
+    }
+  }
+
+  function renderAll(){
+    renderTopActions();
+    renderSyncBadge();
+    if(!hasData()){ renderImportScreen(); return; }
+    renderConferenceScreen();
+  }
+
+  // ---------- import screen ----------
+  function renderImportScreen(){
+    subtitle.textContent = "Comece importando a lista de materiais da transferência.";
+    mainEl.innerHTML = "";
+    var wrap = el("div",{class:"import-wrap"});
+    var card = el("div",{class:"import-card"});
+    card.appendChild(el("h2",{},["Importar lista de transferência"]));
+    card.appendChild(el("p",{class:"lead"},[
+      "Cole abaixo os dados copiados da sua planilha (Excel) — selecione as colunas Código, Un., Produto e Total, copie (Ctrl+C) e cole aqui (Ctrl+V). Isso garante que a lista fica idêntica à planilha original, sem risco de erro de digitação."
+    ]));
+
+    var ta = el("textarea",{placeholder:"Código\tUn.\tProduto\tTotal\n275677\tUN\tABRACADEIRA PARA FITA LED COB 10W...\t36"});
+    card.appendChild(ta);
+
+    var row = el("div",{class:"import-row"});
+    var fileDrop = el("div",{class:"file-drop"},[
+      "ou envie um arquivo ",
+      el("label",{for:"fileInput"},["(.csv / .txt)"]),
+    ]);
+    var fileInput = el("input",{type:"file",id:"fileInput",accept:".csv,.txt"});
+    fileInput.addEventListener("change", function(e){
+      var f = e.target.files && e.target.files[0];
+      if(!f) return;
+      var reader = new FileReader();
+      reader.onload = function(ev){ ta.value = ev.target.result; };
+      reader.readAsText(f, "utf-8");
+    });
+    fileDrop.appendChild(fileInput);
+    row.appendChild(fileDrop);
+    row.appendChild(el("button",{class:"btn btn-primary",onclick:function(){
+      var rows = parseImportText(ta.value);
+      if(!rows.length){ alert("Não consegui identificar linhas válidas. Confira se copiou os dados com cabeçalho (Código, Un., Produto, Total)."); return; }
+      state = { items: itemsFromRows(rows), extras: [], importedAt:new Date().toISOString(), sourceLabel:"Lista importada (" + rows.length + " itens)" };
+      save(); scheduleSync(); renderAll();
+    }},["Carregar lista colada"]));
+    row.appendChild(el("button",{class:"btn btn-ghost",onclick:function(){ loadSeed(); renderAll(); }},["Usar dados de exemplo do PDF"]));
+    card.appendChild(row);
+
+    card.appendChild(el("div",{class:"hint",html:
+      "<b>Dica:</b> o nome das colunas pode vir em qualquer ordem — o sistema reconhece automaticamente <code>Código</code>, <code>Un.</code>, <code>Produto</code> e <code>Total</code> pelo cabeçalho. " +
+      "Se sua planilha não tiver cabeçalho, garanta que as 4 últimas colunas estejam na ordem Código, Un., Produto, Total."
+    }));
+    card.appendChild(el("div",{class:"import-meta"},[
+      "Os dados de exemplo carregam " + SEED_DATA.length + " itens extraídos do relatório em PDF que você enviou, apenas para você testar a ferramenta agora. " +
+      "Para a conferência real, importe a planilha completa colando os dados do Excel — assim você garante 100% de fidelidade com a lista oficial de transferência."
+    ]));
+    wrap.appendChild(card);
+    mainEl.appendChild(wrap);
+  }
+
+  // ---------- conference screen ----------
+  function renderConferenceScreen(){
+    var c = counts();
+    subtitle.textContent = state.sourceLabel + (state.importedAt ? " · carregada em " + new Date(state.importedAt).toLocaleString("pt-BR") : "");
+    mainEl.innerHTML = "";
+
+    // stats
+    var stats = el("div",{class:"stats"});
+    var statDefs = [
+      {key:"todos", label:"Itens na lista", value:c.total, tone:""},
+      {key:"conferidos", label:"Conferidos", value:c.conferidos+"/"+c.total, tone:""},
+      {key:"correto", label:"Corretos", value:c.correto, tone:"tone-ok"},
+      {key:"divergente", label:"Divergências", value:c.divergente, tone:"tone-warn"},
+      {key:"faltante", label:"Faltantes", value:c.faltante, tone:"tone-danger"},
+      {key:"extra", label:"Não previstos", value:c.extra, tone:"tone-extra"}
+    ];
+    statDefs.forEach(function(d){
+      var s = el("div",{class:"stat "+d.tone+(ui.filter===d.key?" active":""),onclick:function(){ ui.filter=d.key; renderConferenceScreen(); }},[
+        el("div",{class:"n"},[String(d.value)]),
+        el("div",{class:"l"},[d.label])
+      ]);
+      stats.appendChild(s);
+    });
+    mainEl.appendChild(stats);
+
+    // scan dock
+    var dock = el("div",{class:"dock"});
+    dock.appendChild(el("label",{for:"scanInput"},["Buscar / bipar produto para conferir"]));
+    var scanRow = el("div",{class:"scan-row"});
+    var scanInput = el("input",{type:"text", id:"scanInput", autocomplete:"off", placeholder:"Digite o código ou nome do produto e pressione Enter…"});
+    scanRow.appendChild(scanInput);
+    dock.appendChild(scanRow);
+    var suggestionsBox = el("div",{class:"suggestions"});
+    dock.appendChild(suggestionsBox);
+    var dynamicArea = el("div",{});
+    dock.appendChild(dynamicArea);
+    mainEl.appendChild(dock);
+
+    function clearDynamic(){ dynamicArea.innerHTML = ""; ui.matchedItem=null; ui.matchedIsExtra=false; }
+
+    function showConfirm(item){
+      clearDynamic();
+      ui.matchedItem = item; ui.matchedIsExtra = false;
+      var box = el("div",{class:"confirm"});
+      var jaConferido = item.recebido>0 ? (" · já registrado: " + fmt(item.recebido)) : "";
+      box.appendChild(el("div",{class:"info"},[
+        el("div",{class:"code"},[item.codigo + " · " + item.un]),
+        el("div",{class:"name"},[item.produto]),
+        el("div",{class:"meta"},["Esperado: " + fmt(item.esperado) + jaConferido])
+      ]));
+      var qtyBlock = el("div",{class:"qty-block"});
+      qtyBlock.appendChild(el("label",{},["Quantidade recebida agora"]));
+      var qtyInput = el("input",{type:"text", inputmode:"decimal", value:"1"});
+      qtyBlock.appendChild(qtyInput);
+      box.appendChild(qtyBlock);
+      var btns = el("div",{class:"btns"});
+      btns.appendChild(el("button",{class:"btn btn-primary btn-sm",onclick:function(){
+        var q = parseBRNumber(qtyInput.value);
+        if(q<=0) return;
+        item.recebido += q;
+        item.updatedAt = Date.now();
+        save(); scheduleSync();
+        scanInput.value=""; suggestionsBox.innerHTML=""; clearDynamic();
+        renderConferenceScreen();
+        document.getElementById("scanInput") && document.getElementById("scanInput").focus();
+      }},["Registrar"]));
+      btns.appendChild(el("button",{class:"btn btn-ghost btn-sm",onclick:function(){ clearDynamic(); scanInput.value=""; suggestionsBox.innerHTML=""; scanInput.focus(); }},["Cancelar"]));
+      box.appendChild(btns);
+      dynamicArea.appendChild(box);
+      setTimeout(function(){ qtyInput.focus(); qtyInput.select(); }, 0);
+      qtyInput.addEventListener("keydown", function(e){
+        if(e.key==="Enter"){ e.preventDefault(); box.querySelector(".btn-primary").click(); }
+        if(e.key==="Escape"){ e.preventDefault(); box.querySelector(".btn-ghost").click(); }
+      });
+    }
+
+    function showNotFound(query){
+      clearDynamic();
+      var box = el("div",{class:"not-found"});
+      box.appendChild(el("div",{class:"headline"},["Nenhum item da lista corresponde a “" + query + "”."]));
+      var rowEl = el("div",{class:"row"});
+      var codeField = el("div",{class:"field"},[el("label",{},["Código"]), (function(){ var i=el("input",{type:"text",value:query}); return i; })()]);
+      var nameField = el("div",{class:"field"},[el("label",{},["Descrição (opcional)"]), el("input",{type:"text",placeholder:"O que chegou fisicamente?"})]);
+      var qtyField = el("div",{class:"field qty"},[el("label",{},["Qtd."]), el("input",{type:"text",inputmode:"decimal",value:"1"})]);
+      rowEl.appendChild(codeField); rowEl.appendChild(nameField); rowEl.appendChild(qtyField);
+      box.appendChild(rowEl);
+      var btns = el("div",{style:"margin-top:10px;display:flex;gap:8px;"});
+      var registerBtn = el("button",{class:"btn btn-sm",style:"border-color:var(--danger);color:var(--danger);",onclick:function(){
+        var codigo = codeField.querySelector("input").value.trim() || query;
+        var produto = nameField.querySelector("input").value.trim() || "(sem descrição informada)";
+        var q = parseBRNumber(qtyField.querySelector("input").value);
+        if(q<=0) return;
+        var existing = state.extras.find(function(ex){ return ex.codigo===codigo; });
+        var t = Date.now();
+        if(existing){ existing.recebido += q; existing.updatedAt = t; }
+        else { state.extras.push({id:makeId(), codigo:codigo, produto:produto, un:"UN", recebido:q, updatedAt:t}); }
+        save(); scheduleSync();
+        scanInput.value=""; suggestionsBox.innerHTML=""; clearDynamic();
+        renderConferenceScreen();
+        document.getElementById("scanInput") && document.getElementById("scanInput").focus();
+      }},["Registrar mesmo assim (item não previsto)"]);
+      btns.appendChild(registerBtn);
+      btns.appendChild(el("button",{class:"btn btn-ghost btn-sm",onclick:function(){ clearDynamic(); scanInput.value=""; suggestionsBox.innerHTML=""; scanInput.focus(); }},["Cancelar"]));
+      box.appendChild(btns);
+      box.appendChild(el("small",{},["Use isso para registrar produtos que chegaram fisicamente mas não estão na planilha da transferência."]));
+      dynamicArea.appendChild(box);
+    }
+
+    function doSearch(q){
+      var nq = normalize(q);
+      suggestionsBox.innerHTML = "";
+      if(!nq){ clearDynamic(); return; }
+      var exact = state.items.find(function(it){ return normalize(it.codigo)===nq; });
+      var list;
+      if(exact){ list = [exact]; }
+      else {
+        list = state.items.filter(function(it){
+          return normalize(it.codigo).indexOf(nq)===0 || normalize(it.produto).indexOf(nq)>=0;
+        }).slice(0,8);
+      }
+      if(!list.length){ return; }
+      list.forEach(function(it){
+        var s = statusOf(it);
+        var row = el("button",{class:"sugg-item",type:"button",onclick:function(){ showConfirm(it); }},[
+          el("span",{class:"code"},[it.codigo]),
+          el("span",{class:"name"},[it.produto]),
+          el("span",{class:"mini"},[fmt(it.recebido)+"/"+fmt(it.esperado)+" "+it.un]),
+          (function(){ var p=el("span",{class:"pill "+(s==="correto"?"ok":s==="divergente"?"warn":"danger")},[statusLabel(s)]); return p; })()
+        ]);
+        suggestionsBox.appendChild(row);
+      });
+    }
+
+    scanInput.addEventListener("input", function(){ ui.lastQuery = scanInput.value; doSearch(scanInput.value); });
+    scanInput.addEventListener("keydown", function(e){
+      if(e.key !== "Enter") return;
+      e.preventDefault();
+      var q = scanInput.value.trim();
+      if(!q) return;
+      var nq = normalize(q);
+      var exact = state.items.find(function(it){ return normalize(it.codigo)===nq; });
+      if(exact){ showConfirm(exact); return; }
+      var narrowed = state.items.filter(function(it){
+        return normalize(it.codigo).indexOf(nq)===0 || normalize(it.produto).indexOf(nq)>=0;
+      });
+      if(narrowed.length===1){ showConfirm(narrowed[0]); return; }
+      if(narrowed.length>1){ return; } // let user click the right suggestion
+      showNotFound(q);
+    });
+    setTimeout(function(){ scanInput.focus(); }, 0);
+
+    // tabs
+    var tabs = el("div",{class:"tabs"});
+    var tabDefs = [
+      {key:"todos", label:"Todos ("+c.total+")"},
+      {key:"correto", label:"Corretos ("+c.correto+")"},
+      {key:"divergente", label:"Divergências ("+c.divergente+")"},
+      {key:"faltante", label:"Faltantes ("+c.faltante+")"},
+      {key:"extra", label:"Não previstos ("+c.extra+")"}
+    ];
+    tabDefs.forEach(function(d){
+      tabs.appendChild(el("button",{class:"tab"+(ui.filter===d.key?" active":""),onclick:function(){ ui.filter=d.key; renderConferenceScreen(); }},[d.label]));
+    });
+    var toolbar = el("div",{class:"table-toolbar"});
+    toolbar.appendChild(tabs);
+    var filterBox = el("div",{class:"table-filter"});
+    var filterInput = el("input",{type:"text",placeholder:"Filtrar lista por código ou nome…",value:ui.tableSearch});
+    filterInput.addEventListener("input", function(){ ui.tableSearch = filterInput.value; renderTable(); });
+    filterBox.appendChild(filterInput);
+    toolbar.appendChild(filterBox);
+    mainEl.appendChild(toolbar);
+
+    var tableWrap = el("div",{class:"table-wrap"});
+    mainEl.appendChild(tableWrap);
+
+    function renderTable(){
+      tableWrap.innerHTML = "";
+      var table = el("table");
+      var thead = el("thead",{},[el("tr",{},[
+        el("th",{},["Código"]), el("th",{},["Produto"]), el("th",{},["Un."]),
+        el("th",{style:"text-align:right"},["Esperado"]), el("th",{style:"text-align:right"},["Recebido"]),
+        el("th",{style:"text-align:right"},["Diferença"]), el("th",{},["Status"])
+      ])]);
+      table.appendChild(thead);
+      var tbody = el("tbody");
+
+      var nq = normalize(ui.tableSearch);
+      var rowsToShow = [];
+      state.items.forEach(function(it){
+        var s = statusOf(it);
+        if(ui.filter!=="todos" && ui.filter!=="extra" && ui.filter!==s) return;
+        if(ui.filter==="extra") return;
+        if(nq && normalize(it.codigo).indexOf(nq)<0 && normalize(it.produto).indexOf(nq)<0) return;
+        rowsToShow.push({kind:"item", ref:it, status:s});
+      });
+      if(ui.filter==="todos" || ui.filter==="extra"){
+        state.extras.forEach(function(ex){
+          if(nq && normalize(ex.codigo).indexOf(nq)<0 && normalize(ex.produto).indexOf(nq)<0) return;
+          rowsToShow.push({kind:"extra", ref:ex, status:"extra"});
+        });
+      }
+
+      if(!rowsToShow.length){
+        tbody.appendChild(el("tr",{class:"empty-row"},[el("td",{colspan:"7"},["Nenhum item nesta visão."])]));
+      }
+
+      rowsToShow.forEach(function(r){
+        var tr = el("tr");
+        if(r.kind==="item"){
+          var it = r.ref;
+          var diff = it.recebido - it.esperado;
+          tr.appendChild(el("td",{class:"code"},[it.codigo]));
+          tr.appendChild(el("td",{class:"produto",title:it.produto},[it.produto]));
+          tr.appendChild(el("td",{},[it.un]));
+          tr.appendChild(el("td",{class:"num"},[fmt(it.esperado)]));
+          var recCell = el("td",{class:"num"});
+          var recInput = el("input",{type:"text", inputmode:"decimal", value:fmt(it.recebido)});
+          recInput.addEventListener("change", function(){
+            it.recebido = parseBRNumber(recInput.value);
+            it.updatedAt = Date.now();
+            save(); scheduleSync(); renderConferenceScreen();
+          });
+          recCell.appendChild(recInput);
+          tr.appendChild(recCell);
+          tr.appendChild(el("td",{class:"num "+(diff>0?"diff-pos":diff<0?"diff-neg":"diff-zero")},[(diff>0?"+":"")+fmt(diff)]));
+          var st = r.status;
+          tr.appendChild(el("td",{},[el("span",{class:"pill "+(st==="correto"?"ok":st==="divergente"?"warn":"danger")},[statusLabel(st)])]));
+        } else {
+          var ex = r.ref;
+          tr.appendChild(el("td",{class:"code"},[ex.codigo]));
+          tr.appendChild(el("td",{class:"produto",title:ex.produto},[ex.produto]));
+          tr.appendChild(el("td",{},[ex.un]));
+          tr.appendChild(el("td",{class:"num"},["—"]));
+          var recCell2 = el("td",{class:"num"});
+          var recInput2 = el("input",{type:"text", inputmode:"decimal", value:fmt(ex.recebido)});
+          recInput2.addEventListener("change", function(){ ex.recebido = parseBRNumber(recInput2.value); ex.updatedAt = Date.now(); save(); scheduleSync(); renderConferenceScreen(); });
+          recCell2.appendChild(recInput2);
+          tr.appendChild(recCell2);
+          tr.appendChild(el("td",{class:"num diff-pos"},["+"+fmt(ex.recebido)]));
+          tr.appendChild(el("td",{},[el("span",{class:"pill extra"},["Não previsto"])]));
+        }
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      tableWrap.appendChild(table);
+    }
+    renderTable();
+  }
+
+  // ---------- export PDF (impressão no mesmo molde do relatório original) ----------
+  function escapeHtml(s){
+    return String(s===undefined||s===null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function ensurePrintArea(){
+    var pa = document.getElementById("printArea");
+    if(!pa){ pa = el("div",{id:"printArea"}); document.body.appendChild(pa); }
+    return pa;
+  }
+  function sectionTable(title, rows, kind){
+    var headCols = (kind==="extra")
+      ? "<th>Código</th><th>Produto</th><th>Un.</th><th class=\"num\">Recebido</th>"
+      : "<th>Código</th><th>Produto</th><th>Un.</th><th class=\"num\">Esperado</th><th class=\"num\">Recebido</th><th class=\"num\">Diferença</th>";
+    var colspan = (kind==="extra") ? 4 : 6;
+    var body = "";
+    if(!rows.length){
+      body = '<tr><td colspan="'+colspan+'" class="rpt-empty">Nenhum item nesta situação.</td></tr>';
+    } else {
+      rows.forEach(function(r){
+        if(kind==="extra"){
+          body += "<tr><td class=\"code\">"+escapeHtml(r.codigo)+"</td><td>"+escapeHtml(r.produto)+"</td><td>"+escapeHtml(r.un)+"</td>"+
+            "<td class=\"num\">"+fmt(r.recebido)+"</td></tr>";
+        } else {
+          var diff = r.recebido - r.esperado;
+          body += "<tr><td class=\"code\">"+escapeHtml(r.codigo)+"</td><td>"+escapeHtml(r.produto)+"</td><td>"+escapeHtml(r.un)+"</td>"+
+            "<td class=\"num\">"+fmt(r.esperado)+"</td><td class=\"num\">"+fmt(r.recebido)+"</td>"+
+            "<td class=\"num\">"+(diff>0?"+":"")+fmt(diff)+"</td></tr>";
+        }
+      });
+    }
+    return "<section><h2>"+escapeHtml(title)+"</h2><table><thead><tr>"+headCols+"</tr></thead><tbody>"+body+"</tbody></table></section>";
+  }
+  function exportPDF(){
+    var c = counts();
+    var divergentes = state.items.filter(function(it){ return statusOf(it)==="divergente"; });
+    var faltantes   = state.items.filter(function(it){ return statusOf(it)==="faltante"; });
+    var corretos    = state.items.filter(function(it){ return statusOf(it)==="correto"; });
+    var extras = state.extras;
+
+    var html = "<div class=\"rpt\">";
+    html += "<h1>Relatório de Conferência de Transferência</h1>";
+    html += "<div class=\"rpt-sub\">"+escapeHtml(state.sourceLabel||"")+"</div>";
+    html += "<div class=\"rpt-sub\">Gerado em "+escapeHtml(new Date().toLocaleString("pt-BR"))+"</div>";
+    html += "<div class=\"rpt-summary\">"+
+      "Total na lista: <b>"+c.total+"</b> &nbsp;·&nbsp; Conferidos: <b>"+c.conferidos+"</b> &nbsp;·&nbsp; "+
+      "Corretos: <b>"+c.correto+"</b> &nbsp;·&nbsp; Divergências: <b>"+c.divergente+"</b> &nbsp;·&nbsp; "+
+      "Faltantes: <b>"+c.faltante+"</b> &nbsp;·&nbsp; Não previstos: <b>"+c.extra+"</b>"+
+      "</div>";
+
+    html += sectionTable("Divergências ("+divergentes.length+")", divergentes, "item");
+    html += sectionTable("Faltantes ("+faltantes.length+")", faltantes, "item");
+    html += sectionTable("Não previstos na lista ("+extras.length+")", extras, "extra");
+    html += sectionTable("Itens corretos ("+corretos.length+")", corretos, "item");
+    html += "</div>";
+
+    var pa = ensurePrintArea();
+    pa.innerHTML = html;
+
+    var oldTitle = document.title;
+    document.title = "Relatorio-Conferencia-" + new Date().toISOString().slice(0,10);
+    function restoreTitle(){ document.title = oldTitle; window.removeEventListener("afterprint", restoreTitle); }
+    window.addEventListener("afterprint", restoreTitle);
+    setTimeout(function(){ window.print(); }, 50);
+  }
+
+  // ---------- export CSV ----------
+  function csvEscape(v){
+    v = String(v===undefined||v===null?"":v);
+    if(/[;"\n]/.test(v)) return '"' + v.replace(/"/g,'""') + '"';
+    return v;
+  }
+  function exportCSV(){
+    var rows = [["Código","Produto","Unidade","Qtd Esperada","Qtd Recebida","Diferença","Status"]];
+    state.items.forEach(function(it){
+      var s = statusOf(it);
+      rows.push([it.codigo, it.produto, it.un, fmt(it.esperado), fmt(it.recebido), fmt(it.recebido-it.esperado), statusLabel(s)]);
+    });
+    state.extras.forEach(function(ex){
+      rows.push([ex.codigo, ex.produto, ex.un, "", fmt(ex.recebido), fmt(ex.recebido), "Não previsto na lista"]);
+    });
+    var csv = rows.map(function(r){ return r.map(csvEscape).join(";"); }).join("\r\n");
+    var blob = new Blob(["﻿"+csv], {type:"text/csv;charset=utf-8;"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "conferencia-transferencia-" + new Date().toISOString().slice(0,19).replace(/[:T]/g,"-") + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ---------- init ----------
+  load();
+  renderAll();
+  startSyncLoop();
+})();
+</script>
