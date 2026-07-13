@@ -331,7 +331,7 @@
   var state = { items: [], extras: [], importedAt: null, sourceLabel: "" };
 
   // ---------- SEED DATA (carregado de seed-data.js) ----------
-  // [codigo, unidade, produto, quantidade esperada = "Livre"]
+  // [codigo, unidade, produto, quantidade esperada = "Total"]
 
   // ---------- helpers ----------
   function normalize(s){
@@ -384,7 +384,7 @@
       items: SEED_DATA.map(function(r){ return { codigo:r[0], un:r[1], produto:r[2], esperado:r[3], recebido:0, updatedAt:0 }; }),
       extras: [],
       importedAt: new Date().toISOString(),
-      sourceLabel: "Estoque e-commerce (quantidade = Livre) — " + SEED_DATA.length + " itens"
+      sourceLabel: "Estoque e-commerce (quantidade = Total) — " + SEED_DATA.length + " itens"
     };
     save();
     scheduleSync();
@@ -699,7 +699,7 @@
     var card = el("div",{class:"import-card"});
     card.appendChild(el("h2",{},["Importar lista de transferência"]));
     card.appendChild(el("p",{class:"lead"},[
-      "Carregue a lista atualizada de estoque (quantidade esperada = coluna Livre), ou cole os dados de uma planilha própria (Excel) — selecione as colunas Código, Un., Produto e Total, copie (Ctrl+C) e cole aqui (Ctrl+V) — para conferências futuras ou listas atualizadas."
+      "Carregue a lista atualizada de estoque (quantidade esperada = coluna Total), ou cole os dados de uma planilha própria (Excel) — selecione as colunas Código, Un., Produto e Total, copie (Ctrl+C) e cole aqui (Ctrl+V) — para conferências futuras ou listas atualizadas."
     ]));
 
     var seedRow = el("div",{class:"import-row"});
@@ -739,7 +739,7 @@
       "Se sua planilha não tiver cabeçalho, garanta que as 4 últimas colunas estejam na ordem Código, Un., Produto, Total."
     }));
     card.appendChild(el("div",{class:"import-meta"},[
-      "O botão acima carrega os " + SEED_DATA.length + " itens do relatório de estoque atualizado (quantidade esperada = coluna Livre). " +
+      "O botão acima carrega os " + SEED_DATA.length + " itens do relatório de estoque atualizado (quantidade esperada = coluna Total). " +
       "Se preferir garantir fidelidade total com a planilha original, cole os dados diretamente do Excel na área de texto — isso elimina qualquer risco de divergência na transcrição."
     ]));
     wrap.appendChild(card);
